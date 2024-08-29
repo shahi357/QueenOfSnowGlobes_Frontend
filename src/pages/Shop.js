@@ -42,17 +42,20 @@ const Shop = () => {
 
       <div className="w-full h-auto grid grid-cols-3 gap-y-16 mt-12">
         {shopItems.map((shopItem, index) => (
-          <div className="col-span-1 h-auto flex flex-col justify-center items-center">
+          <div className="col-span-1 h-auto flex flex-col justify-center items-center group">
             <img
               key={index}
               src={shopItem.src}
               alt={shopItem.name}
-              className="w-[306px] h-[192px] rounded-[10px] object-cover cursor-pointer transition-all ease-linear duration-100 hover:border-2 hover:border-white"
+              className="w-[306px] h-[192px] rounded-[10px] object-cover cursor-pointer transition-all ease-linear duration-100 group-hover:border-2 group-hover:border-white"
             />
 
             <div className="w-full h-auto flex justify-center items-center -mt-3">
-              <div className="w-[306px] h-[38px] bg-[#904444] flex justify-center items-center">
-                <IoCartOutline size={30} />
+              <div className="w-[306px] h-[38px] bg-[#904444] flex justify-center items-center transition-all ease-linear duration-100 group-hover:border-2 group-hover:border-white">
+                <IoCartOutline
+                  size={30}
+                  className="group-hover:text-white transition-all ease-in-out duration-200"
+                />
               </div>
             </div>
           </div>

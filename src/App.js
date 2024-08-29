@@ -9,6 +9,9 @@ import Signin from "./pages/Signin";
 import Dashboard from "./pages/Dashboard";
 import Gallery from "./pages/Gallery";
 import Shop from "./pages/Shop";
+import Designs from "./pages/Designs";
+import CreateDesign from "./pages/CreateDesign";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
@@ -30,7 +33,32 @@ function App() {
             <Route path="/signin" element={<Signin />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/shop" element={<Shop />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/designs"
+              element={
+                <ProtectedRoute>
+                  <Designs />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/create"
+              element={
+                <ProtectedRoute>
+                  <CreateDesign />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </main>

@@ -31,14 +31,20 @@ const Dashboard = () => {
           Create your own snow globe
         </p>
 
-        <div className="mt-10 w-full h-auto flex justify-center items-center gap-4">
-          <button className="bg-[#85B6FF] text-black w-[180px] h-[57px] rounded-[40px] text-lg font-bold">
+        <div className="mt-10 w-full h-auto flex justify-center items-center gap-4 py-5">
+          <a
+            href="/create"
+            className="bg-[#85B6FF] text-black w-[180px] h-[57px] rounded-[40px] text-lg font-bold flex justify-center items-center transition-all duration-300 ease-in-out hover:ring-2 hover:ring-green-400"
+          >
             Customise
-          </button>
+          </a>
 
-          <button className="bg-[#85B6FF] text-black w-[180px] h-[57px] rounded-[40px] text-lg font-bold">
+          <a
+            href="/designs"
+            className="bg-[#85B6FF] text-black w-[180px] h-[57px] rounded-[40px] text-lg font-bold flex justify-center items-center transition-all duration-300 ease-in-out hover:ring-2 hover:ring-green-400"
+          >
             Designs
-          </button>
+          </a>
         </div>
 
         <div className="flex gap-5 items-center mt-10">
