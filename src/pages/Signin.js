@@ -22,27 +22,41 @@ const Signin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = formState === "login" ? "/api/auth/login" : "/api/auth/signup";
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        sessionStorage.setItem("sessionId", data.userId);
-        toast.success("Success! Redirecting to dashboard...");
-        setTimeout(() => {
-          window.location.href = "/dashboard";
-        }, 500);
-      } else {
-        toast.error(data.message || "An error occurred. Please try again.");
+
+    if (formData.email === "admin@admin.com" && formData.password === "admin") {
+      sessionStorage.setItem("sessionId", "adminSession");
+      sessionStorage.setItem("firstName", "Admin");
+      sessionStorage.setItem("userEmail", "admin@admin.com");
+      sessionStorage.setItem("userRole", "admin"); // Set the role to admin
+      toast.success("Success! Redirecting to admin dashboard...");
+      window.location.href = "/adminDashboard";
+    } else {
+      const url =
+        formState === "login" ? "/api/auth/login" : "/api/auth/signup";
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          sessionStorage.setItem("sessionId", data.userId);
+          sessionStorage.setItem("firstName", data.firstName);
+          sessionStorage.setItem("userEmail", data.email);
+          sessionStorage.setItem("userRole", data.role);
+          toast.success("Success! Redirecting to dashboard...");
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 500);
+        } else {
+          toast.error(data.message || "An error occurred. Please try again.");
+        }
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
       }
-    } catch (error) {
-      toast.error("An error occurred. Please try again.");
     }
   };
 
@@ -79,6 +93,7 @@ const Signin = () => {
                 <button
                   onClick={() => setFormState("signup")}
                   className="text-blue-500 ml-1"
+                  type="button"
                 >
                   Create a new account
                 </button>
@@ -108,6 +123,7 @@ const Signin = () => {
                 <button
                   onClick={() => setFormState("login")}
                   className="text-blue-500 ml-1"
+                  type="button"
                 >
                   Signin
                 </button>

@@ -1,39 +1,50 @@
-import ShopItemImage1 from "../../src/images/shop/SP1.png";
-import ShopItemImage2 from "../../src/images/shop/SP2.png";
-import ShopItemImage3 from "../../src/images/shop/SP3.png";
-import ShopItemImage4 from "../../src/images/shop/SP4.png";
-import ShopItemImage5 from "../../src/images/shop/SP5.png";
-import ShopItemImage6 from "../../src/images/shop/SP6.png";
-
-import { IoCartOutline } from "react-icons/io5";
+import React, { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { IoCartOutline, IoCheckmarkSharp } from "react-icons/io5";
+import { Button, Tooltip } from "@nextui-org/react";
+import { useCart } from "../components/CartContext";
 
 const Shop = () => {
-  const shopItems = [
-    {
-      name: "Item1",
-      src: ShopItemImage1,
-    },
-    {
-      name: "Item2",
-      src: ShopItemImage2,
-    },
-    {
-      name: "Item3",
-      src: ShopItemImage3,
-    },
-    {
-      name: "Item4",
-      src: ShopItemImage4,
-    },
-    {
-      name: "Item5",
-      src: ShopItemImage5,
-    },
-    {
-      name: "Item6",
-      src: ShopItemImage6,
-    },
-  ];
+  const [shopItems, setShopItems] = useState([]);
+  const { cart, addToCart } = useCart();
+
+  const navigate = useNavigate();
+  const sessionId = sessionStorage.getItem("sessionId");
+
+  const fetchShopItems = async () => {
+    try {
+      const response = await fetch("/api/shop/items");
+      const data = await response.json();
+      if (response.ok) {
+        setShopItems(data);
+      } else {
+        console.error("Failed to fetch shop items");
+      }
+    } catch (error) {
+      console.error("Error fetching shop items");
+    }
+  };
+
+  useEffect(() => {
+    fetchShopItems();
+  }, []);
+
+  useEffect(() => {
+    console.log("Updated Cart Items:", cart);
+  }, [cart]);
+
+  const handleAddToCart = (shopItem) => {
+    if (!sessionId) {
+      toast.error("Please sign in to add items to the cart.");
+      navigate("/signin");
+      return;
+    }
+
+    addToCart(shopItem);
+    toast.success("Item added successfully to your cart.");
+  };
+
   return (
     <section className="px-28 pb-16">
       <div className="mt-12">
@@ -41,26 +52,52 @@ const Shop = () => {
       </div>
 
       <div className="w-full h-auto grid grid-cols-3 gap-y-16 mt-12">
-        {shopItems.map((shopItem, index) => (
-          <div className="col-span-1 h-auto flex flex-col justify-center items-center group">
-            <img
-              key={index}
-              src={shopItem.src}
-              alt={shopItem.name}
-              className="w-[306px] h-[192px] rounded-[10px] object-cover cursor-pointer transition-all ease-linear duration-100 group-hover:border-2 group-hover:border-white"
-            />
+        {shopItems.map((shopItem, index) => {
+          const isInCart = cart.some((item) => item.id === shopItem.id);
 
-            <div className="w-full h-auto flex justify-center items-center -mt-3">
-              <div className="w-[306px] h-[38px] bg-[#904444] flex justify-center items-center transition-all ease-linear duration-100 group-hover:border-2 group-hover:border-white">
-                <IoCartOutline
-                  size={30}
-                  className="group-hover:text-white transition-all ease-in-out duration-200"
-                />
+          return (
+            <div
+              key={index}
+              className="col-span-1 h-auto flex flex-col justify-center items-center group"
+            >
+              <img
+                src={shopItem.src}
+                alt={shopItem.name}
+                className="w-[306px] h-[192px] rounded-[10px] object-cover group-hover:border-2 group-hover:border-white"
+              />
+
+              <div className="w-full h-auto flex justify-center items-center -mt-3">
+                <div className="w-[306px] h-auto bg-[#904444] flex justify-between px-5 py-2 items-center group-hover:border-2 group-hover:border-white">
+                  <span className="font-semibold text-white">
+                    ${shopItem.price}
+                  </span>
+
+                  <Tooltip
+                    content={isInCart ? "Already added to cart" : "Add to cart"}
+                    closeDelay={50}
+                    color={isInCart ? "primary" : "success"}
+                  >
+                    <Button
+                      isIconOnly
+                      color={isInCart ? "primary" : "success"}
+                      aria-label="Add to cart"
+                      onClick={() => handleAddToCart(shopItem)}
+                      disabled={isInCart}
+                    >
+                      {isInCart ? (
+                        <IoCheckmarkSharp size={20} />
+                      ) : (
+                        <IoCartOutline size={20} />
+                      )}
+                    </Button>
+                  </Tooltip>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+      <ToastContainer autoClose={1500} />
     </section>
   );
 };
