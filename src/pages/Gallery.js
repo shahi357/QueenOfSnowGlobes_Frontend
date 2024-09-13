@@ -43,7 +43,7 @@ const Gallery = () => {
         <h2 className="text-white body-text text-[25px] font-bold">Gallery</h2>
       </div>
 
-      <div className="w-full h-auto grid grid-cols-3 gap-y-16 mt-12">
+      <div className="w-full h-auto grid grid-cols-4 gap-y-16 mt-12 gap-x-10">
         {galleryImages.length !== 0 ? (
           <>
             {galleryImages.map((galleryImage, index) => (
@@ -54,6 +54,7 @@ const Gallery = () => {
                 <img
                   src={galleryImage.src}
                   alt={galleryImage.name}
+                  loading="lazy"
                   className="w-[306px] h-[192px] rounded-[10px] object-cover cursor-pointer overflow-hidden transform transition-all ease-in-out duration-300 hover:scale-95 hover:shadow-xl"
                   onClick={() => handleImagePopUp(galleryImage)}
                 />
